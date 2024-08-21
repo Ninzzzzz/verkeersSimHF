@@ -4,14 +4,21 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c16e3731-19f8-4d04-86bc-a3cec2a1fc07" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/KotlinJavaRuntime.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/uiDesigner.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/Application.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/Car.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/VerkeerssimulatieService.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/Wegdek.java" afterDir="false" />
+    <list default="true" id="c16e3731-19f8-4d04-86bc-a3cec2a1fc07" name="Changes" comment="hi">
+      <change afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/implementations/MyLinkedList.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/implementations/MyPriorityQueue.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/implementations/MyQueue.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/implementations/MyStack.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/models/Vehicle.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/models/Wegdek.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/services/TrafficLightSensor.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/services/VerkeerssimulatieService.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/Main.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/Application.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/Car.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/VerkeerssimulatieService.java" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/Wegdek.java" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -43,6 +50,7 @@
   </component>
   <component name="PropertiesComponent">{
   &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
     &quot;RunOnceActivity.OpenProjectViewOnStart&quot;: &quot;true&quot;,
     &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
     &quot;SHARE_PROJECT_CONFIGURATION_FILES&quot;: &quot;true&quot;,
@@ -84,8 +92,22 @@
       <workItem from="1723416433774" duration="317000" />
       <workItem from="1723416763495" duration="1212000" />
       <workItem from="1723496566577" duration="3208000" />
-      <workItem from="1723580713879" duration="975000" />
+      <workItem from="1723580713879" duration="1260000" />
+      <workItem from="1723662377098" duration="153000" />
+      <workItem from="1723756210006" duration="2238000" />
+      <workItem from="1723857155245" duration="1287000" />
+      <workItem from="1723900943560" duration="10229000" />
+      <workItem from="1724274909962" duration="392000" />
     </task>
+    <task id="LOCAL-00001" summary="hi">
+      <option name="closed" value="true" />
+      <created>1723590122312</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1723590122312</updated>
+    </task>
+    <option name="localTasksCounter" value="2" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -129,16 +151,9 @@
       </map>
     </option>
   </component>
-  <component name="XDebuggerManager">
-    <breakpoint-manager>
-      <breakpoints>
-        <line-breakpoint enabled="true" type="java-line">
-          <url>file://$PROJECT_DIR$/src/Main.java</url>
-          <line>11</line>
-          <option name="timeStamp" value="1" />
-        </line-breakpoint>
-      </breakpoints>
-    </breakpoint-manager>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="hi" />
+    <option name="LAST_COMMIT_MESSAGE" value="hi" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
