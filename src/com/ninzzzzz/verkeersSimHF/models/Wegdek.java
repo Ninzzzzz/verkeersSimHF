@@ -35,13 +35,17 @@ public class Wegdek {
         return vehiclesOnWegdek.isEmpty();
     }
 
-    // For debugging purposes
-    public void showVehiclesOnWegdek() {
-        Vehicle next;
-        while ((next = vehiclesOnWegdek.dequeue()) != null) {
-            System.out.println(next);
-        }
+    public MyPriorityQueue<Vehicle> getVehicleQueue() {
+        return vehiclesOnWegdek;
     }
 
-    // Additional methods related to the Wegdek can be added here
+    public int getVehicleCount() {
+        return vehiclesOnWegdek.size();
+    }
+
+    public void showVehiclesOnWegdek() {
+        while (!vehiclesOnWegdek.isEmpty()) {
+            System.out.println(vehiclesOnWegdek.dequeue());
+        }
+    }
 }

@@ -27,7 +27,7 @@ public class MyPriorityQueue<T extends Comparable<T>> {
         swap(0, size - 1);
         size--;
         sink(0);
-        items[size] = null; // Avoid loitering
+        items[size] = null;
         if (size > 0 && size == items.length / 4) {
             resize(items.length / 2);
         }
@@ -43,6 +43,10 @@ public class MyPriorityQueue<T extends Comparable<T>> {
 
     public boolean isEmpty() {
         return size == 0;
+    }
+
+    public int size() {
+        return size;
     }
 
     private void swim(int k) {
