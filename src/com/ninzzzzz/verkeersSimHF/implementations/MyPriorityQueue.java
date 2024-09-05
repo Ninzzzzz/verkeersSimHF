@@ -1,20 +1,23 @@
 package com.ninzzzzz.verkeersSimHF.implementations;
 
-public class MyPriorityQueue<T extends Comparable<T>> {
+public class MyPriorityQueue<T> {
     private T[] items;
     private int size;
+    private int[] priorities;
 
     @SuppressWarnings("unchecked")
     public MyPriorityQueue(int capacity) {
-        items = (T[]) new Comparable[capacity];
+        items = (T[]) new Object[capacity];
+        priorities = new int[capacity];
         size = 0;
     }
 
-    public void enqueue(T item) {
+    public void enqueue(T item, int priority) {
         if (size == items.length) {
             resize(2 * items.length);
         }
         items[size] = item;
+        priorities[size] = priority;
         size++;
         swim(size - 1);
     }
@@ -28,6 +31,7 @@ public class MyPriorityQueue<T extends Comparable<T>> {
         size--;
         sink(0);
         items[size] = null;
+        priorities[size] = 0;
         if (size > 0 && size == items.length / 4) {
             resize(items.length / 2);
         }
@@ -71,21 +75,25 @@ public class MyPriorityQueue<T extends Comparable<T>> {
     }
 
     private boolean less(int i, int j) {
-        return items[i].compareTo(items[j]) < 0;
+        return priorities[i] < priorities[j];
     }
 
     private void swap(int i, int j) {
-        T temp = items[i];
+        T tempItem = items[i];
+        int tempPriority = priorities[i];
         items[i] = items[j];
-        items[j] = temp;
+        priorities[i] = priorities[j];
+        items[j] = tempItem;
+        priorities[j] = tempPriority;
     }
 
     @SuppressWarnings("unchecked")
     private void resize(int capacity) {
-        T[] temp = (T[]) new Comparable[capacity];
-        for (int i = 0; i < size; i++) {
-            temp[i] = items[i];
-        }
-        items = temp;
+        T[] tempItems = (T[]) new Object[capacity];
+        int[] tempPriorities = new int[capacity];
+        System.arraycopy(items, 0, tempItems, 0, size);
+        System.arraycopy(priorities, 0, tempPriorities, 0, size);
+        items = tempItems;
+        priorities = tempPriorities;
     }
 }

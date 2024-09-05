@@ -12,7 +12,8 @@ public class VerkeerssimulatieService {
     private TrafficLightSensor westSensor;
 
     private MyLinkedList<Wegdek> playbackOrder = new MyLinkedList<>();
-    private MyStack<Vehicle> stack = new MyStack<>();
+    private MyStack<VehicleMovement> vehicleMovementStack = new MyStack<>();
+    private int totalCycles = 0;
 
     public VerkeerssimulatieService() {
         this.northSensor = new TrafficLightSensor(4); // North
@@ -23,13 +24,26 @@ public class VerkeerssimulatieService {
 
     public void calculateTrafficLightCycles(Wegdek[] roads) {
         playbackOrder = new MyLinkedList<>(); // Reset playback order
-        for (Wegdek road : roads) {
-            processTrafficLightCycle(road, getSensorForRoad(road.getNaam()));
-            playbackOrder.add(road); // Record the order of roads processed
-        }
+        int maxVehiclesPerCycle = 5;
+        boolean hasMoreVehicles;
+
+        do {
+            hasMoreVehicles = false;
+            for (Wegdek road : roads) {
+                if (!road.isWegdekEmpty()) {
+                    processTrafficLightCycle(road, getSensorForRoad(road.getNaam()), maxVehiclesPerCycle);
+                    playbackOrder.add(road); // Record the order of roads processed
+                    hasMoreVehicles = true;
+                    System.out.println(); // Add space between roads for readability
+                }
+            }
+            totalCycles++;
+        } while (hasMoreVehicles);
+
+        System.out.println("Total Cycles: " + totalCycles);
     }
 
-    private void processTrafficLightCycle(Wegdek road, TrafficLightSensor sensor) {
+    private void processTrafficLightCycle(Wegdek road, TrafficLightSensor sensor, int maxVehiclesPerCycle) {
         int vehicleCount = road.getVehicleCount();
 
         if (sensor.shouldSkipGreenLight(vehicleCount)) {
@@ -37,19 +51,36 @@ public class VerkeerssimulatieService {
             return;
         }
 
-        int maxVehicles = sensor.vehiclesToAllow(vehicleCount);
+        int vehiclesToProcess = sensor.vehiclesToAllow(vehicleCount);
+        vehiclesToProcess = Math.min(vehiclesToProcess, maxVehiclesPerCycle); // Enforce max 5 vehicles per cycle
+
         MyStack<Vehicle> tempStack = new MyStack<>();
+        MyStack<Vehicle> normalVehicleStack = new MyStack<>();
 
-        System.out.println(road.getNaam() + ": Green light for " + maxVehicles + " vehicles.");
+        System.out.println(road.getNaam() + ": Green light for " + vehiclesToProcess + " vehicles.");
 
-        for (int i = 0; i < maxVehicles; i++) {
-            Vehicle vehicle = road.removeVehicleFromWegdek();
-            tempStack.push(vehicle);
-            printVehicleMovement(vehicle, road.getNaam(), i + 1);
+        // Process higher priority vehicles first (police, fire truck, ambulance)
+        for (int i = 0; i < vehiclesToProcess && !road.isWegdekEmpty(); i++) {
+            Vehicle vehicle = road.peekNextVehicle();  // Peek to check the vehicle's priority
+            if (vehicle.getPriority() > 0) {
+                vehicle = road.removeVehicleFromWegdek();
+                tempStack.push(vehicle);  // Push higher priority vehicle to temp stack
+                printVehicleMovement(vehicle, road.getNaam(), i + 1);
+            } else {
+                normalVehicleStack.push(road.removeVehicleFromWegdek());  // Collect regular vehicles for later
+            }
         }
 
+        // Process remaining regular vehicles (if any)
+        while (!normalVehicleStack.isEmpty() && vehiclesToProcess-- > 0) {
+            Vehicle vehicle = normalVehicleStack.pop();
+            tempStack.push(vehicle);
+            printVehicleMovement(vehicle, road.getNaam(), vehiclesToProcess);
+        }
+
+        // Save the vehicles along with their roads for reverse playback
         while (!tempStack.isEmpty()) {
-            stack.push(tempStack.pop()); // Save for reverse playback
+            vehicleMovementStack.push(new VehicleMovement(tempStack.pop(), road.getNaam()));  // Save vehicle and road info
         }
     }
 
@@ -90,15 +121,18 @@ public class VerkeerssimulatieService {
         }
     }
 
+    // Reverse playback
     public void reversePlayback() {
         System.out.println("Reverse Playback:");
-        while (!stack.isEmpty()) {
-            Vehicle vehicle = stack.pop();
+        while (!vehicleMovementStack.isEmpty()) {
+            VehicleMovement movement = vehicleMovementStack.pop();
+            Vehicle vehicle = movement.getVehicle();
+            String roadName = movement.getRoadName();
             String vehicleType = getVehicleType(vehicle.getPriority());
             if (vehicleType.equals("Regular")) {
-                System.out.println(vehicleType + " on " + vehicle.getId() + " drives away.");
+                System.out.println("Vehicle " + vehicle.getId() + " drives back to " + roadName + ".");
             } else {
-                System.out.println(vehicleType + " on " + vehicle.getId() + " drives away.");
+                System.out.println(vehicleType + " " + vehicle.getId() + " drives back to " + roadName + ".");
             }
         }
     }

@@ -19,14 +19,17 @@ public class Wegdek {
         this.naam = naam;
     }
 
+    // Enqueue vehicles with priority
     public void addVehicleToWegdek(Vehicle vehicle) {
-        vehiclesOnWegdek.enqueue(vehicle);
+        vehiclesOnWegdek.enqueue(vehicle, vehicle.getPriority());
     }
 
+    // Dequeue the highest-priority vehicle
     public Vehicle removeVehicleFromWegdek() {
         return vehiclesOnWegdek.dequeue();
     }
 
+    // Peek at the next vehicle without dequeuing
     public Vehicle peekNextVehicle() {
         return vehiclesOnWegdek.peek();
     }
@@ -35,17 +38,7 @@ public class Wegdek {
         return vehiclesOnWegdek.isEmpty();
     }
 
-    public MyPriorityQueue<Vehicle> getVehicleQueue() {
-        return vehiclesOnWegdek;
-    }
-
     public int getVehicleCount() {
         return vehiclesOnWegdek.size();
-    }
-
-    public void showVehiclesOnWegdek() {
-        while (!vehiclesOnWegdek.isEmpty()) {
-            System.out.println(vehiclesOnWegdek.dequeue());
-        }
     }
 }

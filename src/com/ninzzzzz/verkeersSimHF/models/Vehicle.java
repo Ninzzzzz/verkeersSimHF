@@ -1,6 +1,6 @@
 package com.ninzzzzz.verkeersSimHF.models;
 
-public class Vehicle implements Comparable<Vehicle> {
+public class Vehicle {
     private String id;        // License plate following Surinamese standards
     private int priority;     // Priority level, where a higher number means higher priority
 
@@ -23,11 +23,6 @@ public class Vehicle implements Comparable<Vehicle> {
 
     public void setPriority(int priority) {
         this.priority = priority;
-    }
-
-    @Override
-    public int compareTo(Vehicle other) {
-        return Integer.compare(other.priority, this.priority); // Higher priority vehicles first
     }
 
     @Override
