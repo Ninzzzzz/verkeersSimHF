@@ -4,12 +4,9 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c16e3731-19f8-4d04-86bc-a3cec2a1fc07" name="Changes" comment="still has errors">
-      <change afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/services/VehicleMovement.java" afterDir="false" />
+    <list default="true" id="c16e3731-19f8-4d04-86bc-a3cec2a1fc07" name="Changes" comment="version no proper scheduling">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/implementations/MyPriorityQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/implementations/MyPriorityQueue.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/models/Vehicle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/models/Vehicle.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/models/Wegdek.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/models/Wegdek.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/services/VerkeerssimulatieService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/services/VerkeerssimulatieService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -94,7 +91,9 @@
       <workItem from="1724716033806" duration="1096000" />
       <workItem from="1725306670068" duration="1881000" />
       <workItem from="1725395005788" duration="3037000" />
-      <workItem from="1725566510458" duration="2535000" />
+      <workItem from="1725566510458" duration="3011000" />
+      <workItem from="1726177507375" duration="1706000" />
+      <workItem from="1726497329662" duration="2017000" />
     </task>
     <task id="LOCAL-00001" summary="hi">
       <option name="closed" value="true" />
@@ -112,7 +111,15 @@
       <option name="project" value="LOCAL" />
       <updated>1725401920048</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="version no proper scheduling">
+      <option name="closed" value="true" />
+      <created>1725576530415</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1725576530416</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -159,7 +166,8 @@
   <component name="VcsManagerConfiguration">
     <MESSAGE value="hi" />
     <MESSAGE value="still has errors" />
-    <option name="LAST_COMMIT_MESSAGE" value="still has errors" />
+    <MESSAGE value="version no proper scheduling" />
+    <option name="LAST_COMMIT_MESSAGE" value="version no proper scheduling" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />

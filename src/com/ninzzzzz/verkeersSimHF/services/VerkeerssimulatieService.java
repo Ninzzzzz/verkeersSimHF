@@ -3,6 +3,7 @@ package com.ninzzzzz.verkeersSimHF.services;
 import com.ninzzzzz.verkeersSimHF.models.Vehicle;
 import com.ninzzzzz.verkeersSimHF.models.Wegdek;
 import com.ninzzzzz.verkeersSimHF.implementations.MyStack;
+import com.ninzzzzz.verkeersSimHF.implementations.MyQueue;
 import com.ninzzzzz.verkeersSimHF.implementations.MyLinkedList;
 
 public class VerkeerssimulatieService {
@@ -54,33 +55,36 @@ public class VerkeerssimulatieService {
         int vehiclesToProcess = sensor.vehiclesToAllow(vehicleCount);
         vehiclesToProcess = Math.min(vehiclesToProcess, maxVehiclesPerCycle); // Enforce max 5 vehicles per cycle
 
-        MyStack<Vehicle> tempStack = new MyStack<>();
-        MyStack<Vehicle> normalVehicleStack = new MyStack<>();
+        MyStack<Vehicle> priorityVehicleStack = new MyStack<>(); // Stack for priority vehicles (LIFO)
+        MyQueue<Vehicle> regularVehicleQueue = new MyQueue<>();  // Queue for regular vehicles (FIFO)
 
         System.out.println(road.getNaam() + ": Green light for " + vehiclesToProcess + " vehicles.");
 
-        // Process higher priority vehicles first (police, fire truck, ambulance)
+        // Separate priority and regular vehicles
         for (int i = 0; i < vehiclesToProcess && !road.isWegdekEmpty(); i++) {
-            Vehicle vehicle = road.peekNextVehicle();  // Peek to check the vehicle's priority
+            Vehicle vehicle = road.peekNextVehicle(); // Peek to check the vehicle's priority
             if (vehicle.getPriority() > 0) {
                 vehicle = road.removeVehicleFromWegdek();
-                tempStack.push(vehicle);  // Push higher priority vehicle to temp stack
-                printVehicleMovement(vehicle, road.getNaam(), i + 1);
+                priorityVehicleStack.push(vehicle); // Collect high-priority vehicles in a stack
             } else {
-                normalVehicleStack.push(road.removeVehicleFromWegdek());  // Collect regular vehicles for later
+                regularVehicleQueue.enqueue(road.removeVehicleFromWegdek()); // Collect regular vehicles in a queue
             }
         }
 
-        // Process remaining regular vehicles (if any)
-        while (!normalVehicleStack.isEmpty() && vehiclesToProcess-- > 0) {
-            Vehicle vehicle = normalVehicleStack.pop();
-            tempStack.push(vehicle);
-            printVehicleMovement(vehicle, road.getNaam(), vehiclesToProcess);
+        // Process high-priority vehicles first (LIFO)
+        while (!priorityVehicleStack.isEmpty()) {
+            Vehicle vehicle = priorityVehicleStack.pop();
+            printVehicleMovement(vehicle, road.getNaam());
+            vehicleMovementStack.push(new VehicleMovement(vehicle, road.getNaam())); // Save for reverse playback
         }
 
-        // Save the vehicles along with their roads for reverse playback
-        while (!tempStack.isEmpty()) {
-            vehicleMovementStack.push(new VehicleMovement(tempStack.pop(), road.getNaam()));  // Save vehicle and road info
+        // Process remaining regular vehicles in FIFO order
+        int vehicleNumber = 1; // Start numbering regular vehicles correctly
+        while (!regularVehicleQueue.isEmpty() && vehiclesToProcess-- > 0) {
+            Vehicle vehicle = regularVehicleQueue.dequeue();
+            printVehicleMovement(vehicle, road.getNaam(), vehicleNumber);
+            vehicleMovementStack.push(new VehicleMovement(vehicle, road.getNaam())); // Save for reverse playback
+            vehicleNumber++;
         }
     }
 
@@ -96,6 +100,15 @@ public class VerkeerssimulatieService {
                 return westSensor;
             default:
                 return null;
+        }
+    }
+
+    private void printVehicleMovement(Vehicle vehicle, String roadName) {
+        String vehicleType = getVehicleType(vehicle.getPriority());
+        if (vehicleType.equals("Regular")) {
+            System.out.println("Vehicle on " + roadName + " (" + vehicle.getId() + ") drives away.");
+        } else {
+            System.out.println(vehicleType + " on " + roadName + " (" + vehicle.getId() + ") drives away.");
         }
     }
 
