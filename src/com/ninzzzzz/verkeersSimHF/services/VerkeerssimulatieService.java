@@ -7,32 +7,24 @@ import com.ninzzzzz.verkeersSimHF.implementations.MyQueue;
 import com.ninzzzzz.verkeersSimHF.implementations.MyLinkedList;
 
 public class VerkeerssimulatieService {
-    private TrafficLightSensor northSensor;
-    private TrafficLightSensor southSensor;
-    private TrafficLightSensor eastSensor;
-    private TrafficLightSensor westSensor;
-
     private MyLinkedList<Wegdek> playbackOrder = new MyLinkedList<>();
     private MyStack<VehicleMovement> vehicleMovementStack = new MyStack<>();
     private int totalCycles = 0;
-
-    public VerkeerssimulatieService() {
-        this.northSensor = new TrafficLightSensor(4); // North
-        this.southSensor = new TrafficLightSensor(2); // South
-        this.eastSensor = new TrafficLightSensor(1);  // East
-        this.westSensor = new TrafficLightSensor(3);  // West
-    }
 
     public void calculateTrafficLightCycles(Wegdek[] roads) {
         playbackOrder = new MyLinkedList<>(); // Reset playback order
         int maxVehiclesPerCycle = 5;
         boolean hasMoreVehicles;
 
+        // **Process all high-priority vehicles (Police, Ambulance, Fire Truck) first**
+        processAllPriorityVehicles(roads);
+
+        // **Then continue processing regular vehicles**
         do {
             hasMoreVehicles = false;
             for (Wegdek road : roads) {
                 if (!road.isWegdekEmpty()) {
-                    processTrafficLightCycle(road, getSensorForRoad(road.getNaam()), maxVehiclesPerCycle);
+                    processRegularVehicles(road, maxVehiclesPerCycle);
                     playbackOrder.add(road); // Record the order of roads processed
                     hasMoreVehicles = true;
                     System.out.println(); // Add space between roads for readability
@@ -44,62 +36,57 @@ public class VerkeerssimulatieService {
         System.out.println("Total Cycles: " + totalCycles);
     }
 
-    private void processTrafficLightCycle(Wegdek road, TrafficLightSensor sensor, int maxVehiclesPerCycle) {
-        int vehicleCount = road.getVehicleCount();
+    private void processAllPriorityVehicles(Wegdek[] roads) {
+        for (Wegdek road : roads) {
+            MyQueue<Vehicle> tempQueue = new MyQueue<>();
+            MyQueue<Vehicle> priorityQueue = new MyQueue<>();  // Priority vehicles
 
-        if (sensor.shouldSkipGreenLight(vehicleCount)) {
-            System.out.println(road.getNaam() + ": Skipping green light.");
-            return;
-        }
-
-        int vehiclesToProcess = sensor.vehiclesToAllow(vehicleCount);
-        vehiclesToProcess = Math.min(vehiclesToProcess, maxVehiclesPerCycle); // Enforce max 5 vehicles per cycle
-
-        MyStack<Vehicle> priorityVehicleStack = new MyStack<>(); // Stack for priority vehicles (LIFO)
-        MyQueue<Vehicle> regularVehicleQueue = new MyQueue<>();  // Queue for regular vehicles (FIFO)
-
-        System.out.println(road.getNaam() + ": Green light for " + vehiclesToProcess + " vehicles.");
-
-        // Separate priority and regular vehicles
-        for (int i = 0; i < vehiclesToProcess && !road.isWegdekEmpty(); i++) {
-            Vehicle vehicle = road.peekNextVehicle(); // Peek to check the vehicle's priority
-            if (vehicle.getPriority() > 0) {
-                vehicle = road.removeVehicleFromWegdek();
-                priorityVehicleStack.push(vehicle); // Collect high-priority vehicles in a stack
-            } else {
-                regularVehicleQueue.enqueue(road.removeVehicleFromWegdek()); // Collect regular vehicles in a queue
+            // Separate high-priority and regular vehicles
+            while (!road.isWegdekEmpty()) {
+                Vehicle vehicle = road.peekNextVehicle();
+                if (vehicle.getPriority() > 0) {
+                    priorityQueue.enqueue(road.removeVehicleFromWegdek());  // Collect priority vehicles
+                } else {
+                    tempQueue.enqueue(road.removeVehicleFromWegdek());  // Collect regular vehicles in original order
+                }
             }
-        }
 
-        // Process high-priority vehicles first (LIFO)
-        while (!priorityVehicleStack.isEmpty()) {
-            Vehicle vehicle = priorityVehicleStack.pop();
-            printVehicleMovement(vehicle, road.getNaam());
-            vehicleMovementStack.push(new VehicleMovement(vehicle, road.getNaam())); // Save for reverse playback
-        }
+            // Process priority vehicles
+            processPriorityVehicles(priorityQueue, road);
 
-        // Process remaining regular vehicles in FIFO order
-        int vehicleNumber = 1; // Start numbering regular vehicles correctly
-        while (!regularVehicleQueue.isEmpty() && vehiclesToProcess-- > 0) {
-            Vehicle vehicle = regularVehicleQueue.dequeue();
-            printVehicleMovement(vehicle, road.getNaam(), vehicleNumber);
-            vehicleMovementStack.push(new VehicleMovement(vehicle, road.getNaam())); // Save for reverse playback
-            vehicleNumber++;
+            // Restore the regular vehicles back to the road
+            road.setVehicleQueue(tempQueue);  // Keep the FIFO order of regular vehicles intact
         }
     }
 
-    private TrafficLightSensor getSensorForRoad(String roadName) {
-        switch (roadName) {
-            case "North":
-                return northSensor;
-            case "South":
-                return southSensor;
-            case "East":
-                return eastSensor;
-            case "West":
-                return westSensor;
-            default:
-                return null;
+    private void processPriorityVehicles(MyQueue<Vehicle> priorityQueue, Wegdek road) {
+        String[] priorityOrder = {"Police", "Ambulance", "Fire Truck"};
+
+        for (String priorityType : priorityOrder) {
+            MyQueue<Vehicle> tempQueue = new MyQueue<>();
+            while (!priorityQueue.isEmpty()) {
+                Vehicle vehicle = priorityQueue.dequeue();
+                String vehicleType = getVehicleType(vehicle.getPriority());
+                if (vehicleType.equals(priorityType)) {
+                    printVehicleMovement(vehicle, road.getNaam());
+                    vehicleMovementStack.push(new VehicleMovement(vehicle, road.getNaam())); // Save for reverse playback
+                } else {
+                    tempQueue.enqueue(vehicle);  // Hold vehicles not yet processed
+                }
+            }
+            priorityQueue = tempQueue;  // Update queue for the next priority type
+        }
+    }
+
+    private void processRegularVehicles(Wegdek road, int maxVehiclesPerCycle) {
+        int vehiclesToProcess = Math.min(maxVehiclesPerCycle, road.getVehicleCount());
+        System.out.println(road.getNaam() + ": Green light for " + vehiclesToProcess + " vehicles.");
+
+        MyQueue<Vehicle> tempQueue = new MyQueue<>();
+        for (int i = 0; i < vehiclesToProcess && !road.isWegdekEmpty(); i++) {
+            Vehicle vehicle = road.removeVehicleFromWegdek();
+            printVehicleMovement(vehicle, road.getNaam(), i + 1);  // FIFO order for regular vehicles
+            vehicleMovementStack.push(new VehicleMovement(vehicle, road.getNaam()));  // Save for reverse playback
         }
     }
 

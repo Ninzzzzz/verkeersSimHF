@@ -1,14 +1,14 @@
 package com.ninzzzzz.verkeersSimHF.models;
 
-import com.ninzzzzz.verkeersSimHF.implementations.MyPriorityQueue;
+import com.ninzzzzz.verkeersSimHF.implementations.MyQueue;
 
 public class Wegdek {
     private String naam;
-    private MyPriorityQueue<Vehicle> vehiclesOnWegdek;
+    private MyQueue<Vehicle> vehiclesOnWegdek;
 
     public Wegdek(String naam, int capacity) {
         this.naam = naam;
-        this.vehiclesOnWegdek = new MyPriorityQueue<>(capacity);
+        this.vehiclesOnWegdek = new MyQueue<>();
     }
 
     public String getNaam() {
@@ -19,17 +19,14 @@ public class Wegdek {
         this.naam = naam;
     }
 
-    // Enqueue vehicles with priority
     public void addVehicleToWegdek(Vehicle vehicle) {
-        vehiclesOnWegdek.enqueue(vehicle, vehicle.getPriority());
+        vehiclesOnWegdek.enqueue(vehicle);
     }
 
-    // Dequeue the highest-priority vehicle
     public Vehicle removeVehicleFromWegdek() {
         return vehiclesOnWegdek.dequeue();
     }
 
-    // Peek at the next vehicle without dequeuing
     public Vehicle peekNextVehicle() {
         return vehiclesOnWegdek.peek();
     }
@@ -39,6 +36,34 @@ public class Wegdek {
     }
 
     public int getVehicleCount() {
-        return vehiclesOnWegdek.size();
+        int count = 0;
+        MyQueue<Vehicle> tempQueue = new MyQueue<>();
+        while (!vehiclesOnWegdek.isEmpty()) {
+            tempQueue.enqueue(vehiclesOnWegdek.dequeue());
+            count++;
+        }
+        vehiclesOnWegdek = tempQueue;
+        return count;
+    }
+
+    // **Method to update the vehicle queue**
+    public void setVehicleQueue(MyQueue<Vehicle> queue) {
+        this.vehiclesOnWegdek = queue;
+    }
+
+    // **Method to return the current vehicle queue (for processing in the service)**
+    public MyQueue<Vehicle> getVehicleQueue() {
+        return vehiclesOnWegdek;
+    }
+
+    // For debugging purposes
+    public void showVehiclesOnWegdek() {
+        MyQueue<Vehicle> tempQueue = new MyQueue<>();
+        while (!vehiclesOnWegdek.isEmpty()) {
+            Vehicle vehicle = vehiclesOnWegdek.dequeue();
+            System.out.println(vehicle);
+            tempQueue.enqueue(vehicle);
+        }
+        vehiclesOnWegdek = tempQueue;
     }
 }

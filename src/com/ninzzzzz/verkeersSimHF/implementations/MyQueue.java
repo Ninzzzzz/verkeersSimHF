@@ -41,4 +41,15 @@ public class MyQueue<T> {
     public boolean isEmpty() {
         return front == null;
     }
+
+    // Optional size method if needed
+    public int size() {
+        int size = 0;
+        Node<T> current = front;
+        while (current != null) {
+            size++;
+            current = current.next;
+        }
+        return size;
+    }
 }
