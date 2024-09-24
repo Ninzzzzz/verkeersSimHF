@@ -3,10 +3,12 @@ package com.ninzzzzz.verkeersSimHF.models;
 public class Vehicle {
     private String id;        // License plate following Surinamese standards
     private int priority;     // Priority level, where a higher number means higher priority
+    private int followNumber; // The follow number assigned to this vehicle
 
-    public Vehicle(String id, int priority) {
+    public Vehicle(String id, int priority, int followNumber) {
         this.id = id;
         this.priority = priority;
+        this.followNumber = followNumber;
     }
 
     public String getId() {
@@ -17,6 +19,10 @@ public class Vehicle {
         return priority;
     }
 
+    public int getFollowNumber() {
+        return followNumber;
+    }
+
     public void setId(String id) {
         this.id = id;
     }
@@ -25,8 +31,12 @@ public class Vehicle {
         this.priority = priority;
     }
 
+    public void setFollowNumber(int followNumber) {
+        this.followNumber = followNumber;
+    }
+
     @Override
     public String toString() {
-        return "Vehicle{id='" + id + "', priority=" + priority + "}";
+        return "Vehicle{id='" + id + "', priority=" + priority + ", followNumber=" + followNumber + "}";
     }
 }

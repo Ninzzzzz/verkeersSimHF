@@ -1,8 +1,5 @@
 package com.ninzzzzz.verkeersSimHF.services;
 
-import com.ninzzzzz.verkeersSimHF.models.Vehicle;
-import com.ninzzzzz.verkeersSimHF.models.Wegdek;
-
 public class TrafficLightSensor {
     private int sensorId;
 

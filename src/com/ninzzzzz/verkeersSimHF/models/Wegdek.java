@@ -46,17 +46,14 @@ public class Wegdek {
         return count;
     }
 
-    // **Method to update the vehicle queue**
     public void setVehicleQueue(MyQueue<Vehicle> queue) {
         this.vehiclesOnWegdek = queue;
     }
 
-    // **Method to return the current vehicle queue (for processing in the service)**
     public MyQueue<Vehicle> getVehicleQueue() {
         return vehiclesOnWegdek;
     }
 
-    // For debugging purposes
     public void showVehiclesOnWegdek() {
         MyQueue<Vehicle> tempQueue = new MyQueue<>();
         while (!vehiclesOnWegdek.isEmpty()) {

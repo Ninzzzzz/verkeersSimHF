@@ -10,16 +10,15 @@ public class VerkeerssimulatieService {
     private MyLinkedList<Wegdek> playbackOrder = new MyLinkedList<>();
     private MyStack<VehicleMovement> vehicleMovementStack = new MyStack<>();
     private int totalCycles = 0;
+    private int globalFollowNumber = 1;  // Follow number across all roads
 
     public void calculateTrafficLightCycles(Wegdek[] roads) {
         playbackOrder = new MyLinkedList<>(); // Reset playback order
         int maxVehiclesPerCycle = 5;
         boolean hasMoreVehicles;
 
-        // **Process all high-priority vehicles (Police, Ambulance, Fire Truck) first**
         processAllPriorityVehicles(roads);
 
-        // **Then continue processing regular vehicles**
         do {
             hasMoreVehicles = false;
             for (Wegdek road : roads) {
@@ -39,28 +38,25 @@ public class VerkeerssimulatieService {
     private void processAllPriorityVehicles(Wegdek[] roads) {
         for (Wegdek road : roads) {
             MyQueue<Vehicle> tempQueue = new MyQueue<>();
-            MyQueue<Vehicle> priorityQueue = new MyQueue<>();  // Priority vehicles
+            MyQueue<Vehicle> priorityQueue = new MyQueue<>();
 
-            // Separate high-priority and regular vehicles
             while (!road.isWegdekEmpty()) {
                 Vehicle vehicle = road.peekNextVehicle();
                 if (vehicle.getPriority() > 0) {
-                    priorityQueue.enqueue(road.removeVehicleFromWegdek());  // Collect priority vehicles
+                    priorityQueue.enqueue(road.removeVehicleFromWegdek());
                 } else {
-                    tempQueue.enqueue(road.removeVehicleFromWegdek());  // Collect regular vehicles in original order
+                    tempQueue.enqueue(road.removeVehicleFromWegdek());
                 }
             }
 
-            // Process priority vehicles
             processPriorityVehicles(priorityQueue, road);
 
-            // Restore the regular vehicles back to the road
-            road.setVehicleQueue(tempQueue);  // Keep the FIFO order of regular vehicles intact
+            road.setVehicleQueue(tempQueue);  // Restore FIFO order for regular vehicles
         }
     }
 
     private void processPriorityVehicles(MyQueue<Vehicle> priorityQueue, Wegdek road) {
-        String[] priorityOrder = {"Police", "Ambulance", "Fire Truck"};
+        String[] priorityOrder = {"Police", "Fire Truck", "Ambulance"};
 
         for (String priorityType : priorityOrder) {
             MyQueue<Vehicle> tempQueue = new MyQueue<>();
@@ -68,13 +64,13 @@ public class VerkeerssimulatieService {
                 Vehicle vehicle = priorityQueue.dequeue();
                 String vehicleType = getVehicleType(vehicle.getPriority());
                 if (vehicleType.equals(priorityType)) {
-                    printVehicleMovement(vehicle, road.getNaam());
-                    vehicleMovementStack.push(new VehicleMovement(vehicle, road.getNaam())); // Save for reverse playback
+                    printVehicleMovementWithFollowNumber(vehicle, road.getNaam());
+                    vehicleMovementStack.push(new VehicleMovement(vehicle, road.getNaam()));
                 } else {
-                    tempQueue.enqueue(vehicle);  // Hold vehicles not yet processed
+                    tempQueue.enqueue(vehicle);
                 }
             }
-            priorityQueue = tempQueue;  // Update queue for the next priority type
+            priorityQueue = tempQueue;
         }
     }
 
@@ -85,43 +81,33 @@ public class VerkeerssimulatieService {
         MyQueue<Vehicle> tempQueue = new MyQueue<>();
         for (int i = 0; i < vehiclesToProcess && !road.isWegdekEmpty(); i++) {
             Vehicle vehicle = road.removeVehicleFromWegdek();
-            printVehicleMovement(vehicle, road.getNaam(), i + 1);  // FIFO order for regular vehicles
-            vehicleMovementStack.push(new VehicleMovement(vehicle, road.getNaam()));  // Save for reverse playback
+            printVehicleMovementWithFollowNumber(vehicle, road.getNaam());
+            vehicleMovementStack.push(new VehicleMovement(vehicle, road.getNaam()));
         }
     }
 
-    private void printVehicleMovement(Vehicle vehicle, String roadName) {
+    private void printVehicleMovementWithFollowNumber(Vehicle vehicle, String roadName) {
         String vehicleType = getVehicleType(vehicle.getPriority());
         if (vehicleType.equals("Regular")) {
-            System.out.println("Vehicle on " + roadName + " (" + vehicle.getId() + ") drives away.");
+            System.out.println("Vehicle " + vehicle.getId() + " with follow number " + vehicle.getFollowNumber() + " on " + roadName + " drives away.");
         } else {
-            System.out.println(vehicleType + " on " + roadName + " (" + vehicle.getId() + ") drives away.");
-        }
-    }
-
-    private void printVehicleMovement(Vehicle vehicle, String roadName, int vehicleNumber) {
-        String vehicleType = getVehicleType(vehicle.getPriority());
-        if (vehicleType.equals("Regular")) {
-            System.out.println("Vehicle " + vehicleNumber + " on " + roadName + " (" + vehicle.getId() + ") drives away.");
-        } else {
-            System.out.println(vehicleType + " on " + roadName + " (" + vehicle.getId() + ") drives away.");
+            System.out.println(vehicleType + " " + vehicle.getId() + " with follow number " + vehicle.getFollowNumber() + " on " + roadName + " drives away.");
         }
     }
 
     private String getVehicleType(int priority) {
         switch (priority) {
-            case 1:
+            case 3:
                 return "Police";
             case 2:
                 return "Fire Truck";
-            case 3:
+            case 1:
                 return "Ambulance";
             default:
                 return "Regular";
         }
     }
 
-    // Reverse playback
     public void reversePlayback() {
         System.out.println("Reverse Playback:");
         while (!vehicleMovementStack.isEmpty()) {
