@@ -3,20 +3,16 @@ package com.ninzzzzz.verkeersSimHF.models;
 import com.ninzzzzz.verkeersSimHF.implementations.MyQueue;
 
 public class Wegdek {
-    private String naam;
+    private final String naam;
     private MyQueue<Vehicle> vehiclesOnWegdek;
 
-    public Wegdek(String naam, int capacity) {
+    public Wegdek(String naam) {
         this.naam = naam;
         this.vehiclesOnWegdek = new MyQueue<>();
     }
 
     public String getNaam() {
         return naam;
-    }
-
-    public void setNaam(String naam) {
-        this.naam = naam;
     }
 
     public void addVehicleToWegdek(Vehicle vehicle) {
@@ -52,15 +48,5 @@ public class Wegdek {
 
     public MyQueue<Vehicle> getVehicleQueue() {
         return vehiclesOnWegdek;
-    }
-
-    public void showVehiclesOnWegdek() {
-        MyQueue<Vehicle> tempQueue = new MyQueue<>();
-        while (!vehiclesOnWegdek.isEmpty()) {
-            Vehicle vehicle = vehiclesOnWegdek.dequeue();
-            System.out.println(vehicle);
-            tempQueue.enqueue(vehicle);
-        }
-        vehiclesOnWegdek = tempQueue;
     }
 }

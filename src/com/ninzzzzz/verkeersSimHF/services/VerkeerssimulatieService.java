@@ -10,11 +10,10 @@ public class VerkeerssimulatieService {
     private MyLinkedList<Wegdek> playbackOrder = new MyLinkedList<>();
     private MyStack<VehicleMovement> vehicleMovementStack = new MyStack<>();
     private int totalCycles = 0;
-    private int globalFollowNumber = 1;  // Follow number across all roads
+    private int globalFollowNumber = 1; // Logical follow number for all vehicles
 
     public void calculateTrafficLightCycles(Wegdek[] roads) {
-        playbackOrder = new MyLinkedList<>(); // Reset playback order
-        int maxVehiclesPerCycle = 5;
+        playbackOrder = new MyLinkedList<>();
         boolean hasMoreVehicles;
 
         processAllPriorityVehicles(roads);
@@ -23,10 +22,10 @@ public class VerkeerssimulatieService {
             hasMoreVehicles = false;
             for (Wegdek road : roads) {
                 if (!road.isWegdekEmpty()) {
-                    processRegularVehicles(road, maxVehiclesPerCycle);
-                    playbackOrder.add(road); // Record the order of roads processed
+                    processRegularVehicles(road);
+                    playbackOrder.add(road);
                     hasMoreVehicles = true;
-                    System.out.println(); // Add space between roads for readability
+                    System.out.println();
                 }
             }
             totalCycles++;
@@ -50,8 +49,7 @@ public class VerkeerssimulatieService {
             }
 
             processPriorityVehicles(priorityQueue, road);
-
-            road.setVehicleQueue(tempQueue);  // Restore FIFO order for regular vehicles
+            road.setVehicleQueue(tempQueue);
         }
     }
 
@@ -64,8 +62,8 @@ public class VerkeerssimulatieService {
                 Vehicle vehicle = priorityQueue.dequeue();
                 String vehicleType = getVehicleType(vehicle.getPriority());
                 if (vehicleType.equals(priorityType)) {
-                    printVehicleMovementWithFollowNumber(vehicle, road.getNaam());
-                    vehicleMovementStack.push(new VehicleMovement(vehicle, road.getNaam()));
+                    printVehicleMovement(vehicle, road.getNaam(), globalFollowNumber++);
+                    vehicleMovementStack.push(new VehicleMovement(vehicle, road.getNaam(), globalFollowNumber - 1));
                 } else {
                     tempQueue.enqueue(vehicle);
                 }
@@ -74,37 +72,32 @@ public class VerkeerssimulatieService {
         }
     }
 
-    private void processRegularVehicles(Wegdek road, int maxVehiclesPerCycle) {
-        int vehiclesToProcess = Math.min(maxVehiclesPerCycle, road.getVehicleCount());
+    private void processRegularVehicles(Wegdek road) {
+        int vehiclesToProcess = Math.min(5, road.getVehicleCount());
         System.out.println(road.getNaam() + ": Green light for " + vehiclesToProcess + " vehicles.");
 
-        MyQueue<Vehicle> tempQueue = new MyQueue<>();
         for (int i = 0; i < vehiclesToProcess && !road.isWegdekEmpty(); i++) {
             Vehicle vehicle = road.removeVehicleFromWegdek();
-            printVehicleMovementWithFollowNumber(vehicle, road.getNaam());
-            vehicleMovementStack.push(new VehicleMovement(vehicle, road.getNaam()));
+            printVehicleMovement(vehicle, road.getNaam(), globalFollowNumber++);
+            vehicleMovementStack.push(new VehicleMovement(vehicle, road.getNaam(), globalFollowNumber - 1));
         }
     }
 
-    private void printVehicleMovementWithFollowNumber(Vehicle vehicle, String roadName) {
+    private void printVehicleMovement(Vehicle vehicle, String roadName, int followNumber) {
         String vehicleType = getVehicleType(vehicle.getPriority());
         if (vehicleType.equals("Regular")) {
-            System.out.println("Vehicle " + vehicle.getId() + " with follow number " + vehicle.getFollowNumber() + " on " + roadName + " drives away.");
+            System.out.println("Vehicle " + vehicle.getId() + " with follow number " + followNumber + " on " + roadName + " drives away.");
         } else {
-            System.out.println(vehicleType + " " + vehicle.getId() + " with follow number " + vehicle.getFollowNumber() + " on " + roadName + " drives away.");
+            System.out.println(vehicleType + " " + vehicle.getId() + " with follow number " + followNumber + " on " + roadName + " drives away.");
         }
     }
 
     private String getVehicleType(int priority) {
         switch (priority) {
-            case 3:
-                return "Police";
-            case 2:
-                return "Fire Truck";
-            case 1:
-                return "Ambulance";
-            default:
-                return "Regular";
+            case 1: return "Ambulance";
+            case 2: return "Fire Truck";
+            case 3: return "Police";
+            default: return "Regular";
         }
     }
 
@@ -114,11 +107,13 @@ public class VerkeerssimulatieService {
             VehicleMovement movement = vehicleMovementStack.pop();
             Vehicle vehicle = movement.getVehicle();
             String roadName = movement.getRoadName();
+            int followNumber = movement.getFollowNumber();
             String vehicleType = getVehicleType(vehicle.getPriority());
+
             if (vehicleType.equals("Regular")) {
-                System.out.println("Vehicle " + vehicle.getId() + " drives back to " + roadName + ".");
+                System.out.println("Vehicle " + vehicle.getId() + " with follow number " + followNumber + " drives back to position " + followNumber + " on " + roadName + ".");
             } else {
-                System.out.println(vehicleType + " " + vehicle.getId() + " drives back to " + roadName + ".");
+                System.out.println(vehicleType + " " + vehicle.getId() + " with follow number " + followNumber + " drives back to position " + followNumber + " on " + roadName + ".");
             }
         }
     }

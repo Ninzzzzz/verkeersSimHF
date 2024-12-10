@@ -4,12 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c16e3731-19f8-4d04-86bc-a3cec2a1fc07" name="Changes" comment="sched is correct now">
+    <list default="true" id="c16e3731-19f8-4d04-86bc-a3cec2a1fc07" name="Changes" comment="Correct info showing but reverse is iffy">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/models/Vehicle.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/models/Vehicle.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/models/Wegdek.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/models/Wegdek.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/services/TrafficLightSensor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/services/TrafficLightSensor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/services/VehicleMovement.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/services/VehicleMovement.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/services/VerkeerssimulatieService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/services/VerkeerssimulatieService.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -27,9 +28,6 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
-  </component>
-  <component name="GithubDefaultAccount">
-    <option name="defaultAccountId" value="e7cf8a3d-d226-4113-9acf-d412a58053b1" />
   </component>
   <component name="ProjectColorInfo">{
   &quot;associatedIndex&quot;: 0
@@ -101,7 +99,10 @@
       <workItem from="1726786763863" duration="672000" />
       <workItem from="1727131983704" duration="675000" />
       <workItem from="1727133363703" duration="611000" />
-      <workItem from="1727206718900" duration="3350000" />
+      <workItem from="1727206718900" duration="4208000" />
+      <workItem from="1727288331679" duration="834000" />
+      <workItem from="1731538042277" duration="121000" />
+      <workItem from="1733785814749" duration="3510000" />
     </task>
     <task id="LOCAL-00001" summary="hi">
       <option name="closed" value="true" />
@@ -143,7 +144,15 @@
       <option name="project" value="LOCAL" />
       <updated>1726786834742</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Correct info showing but reverse is iffy">
+      <option name="closed" value="true" />
+      <created>1727210341911</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1727210341911</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -193,7 +202,19 @@
     <MESSAGE value="version no proper scheduling" />
     <MESSAGE value="version no proper scheduling 2" />
     <MESSAGE value="sched is correct now" />
-    <option name="LAST_COMMIT_MESSAGE" value="sched is correct now" />
+    <MESSAGE value="Correct info showing but reverse is iffy" />
+    <option name="LAST_COMMIT_MESSAGE" value="Correct info showing but reverse is iffy" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/Main.java</url>
+          <line>24</line>
+          <option name="timeStamp" value="1" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
