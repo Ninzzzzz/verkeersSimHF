@@ -1,7 +1,7 @@
 package com.ninzzzzz.verkeersSimHF.services;
 
 public class TrafficLightSensor {
-    private final int sensorId;
+    private int sensorId;
 
     public TrafficLightSensor(int sensorId) {
         this.sensorId = sensorId;
@@ -21,11 +21,11 @@ public class TrafficLightSensor {
 
     public int vehiclesToAllow(int vehicleCount) {
         if (sensorId == 2 || sensorId == 3) {
-            return Math.min(vehicleCount, 10);
+            return Math.min(vehicleCount, 10); // Allow up to 10 vehicles
         } else if (sensorId == 4) {
-            return vehicleCount;
+            return vehicleCount; // Allow all vehicles
         } else {
-            return Math.min(vehicleCount, 5);
+            return Math.min(vehicleCount, 5); // Default: allow up to 5 vehicles
         }
     }
 }

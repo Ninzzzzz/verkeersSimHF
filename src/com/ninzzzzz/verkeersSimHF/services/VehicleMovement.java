@@ -3,14 +3,12 @@ package com.ninzzzzz.verkeersSimHF.services;
 import com.ninzzzzz.verkeersSimHF.models.Vehicle;
 
 public class VehicleMovement {
-    private final Vehicle vehicle;
-    private final String roadName;
-    private final int followNumber;
+    private Vehicle vehicle;
+    private String roadName;
 
-    public VehicleMovement(Vehicle vehicle, String roadName, int followNumber) {
+    public VehicleMovement(Vehicle vehicle, String roadName) {
         this.vehicle = vehicle;
         this.roadName = roadName;
-        this.followNumber = followNumber;
     }
 
     public Vehicle getVehicle() {
@@ -19,9 +17,5 @@ public class VehicleMovement {
 
     public String getRoadName() {
         return roadName;
-    }
-
-    public int getFollowNumber() {
-        return followNumber;
     }
 }
