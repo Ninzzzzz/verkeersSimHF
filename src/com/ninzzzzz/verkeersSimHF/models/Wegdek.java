@@ -63,4 +63,11 @@ public class Wegdek {
         }
         vehiclesOnWegdek = tempQueue;
     }
+    @Override
+    public String toString() {
+        return "Wegdek{" +
+                "naam='" + naam + '\'' +
+                ", vehiclesOnWegdek=" + vehiclesOnWegdek +
+                '}';
+    }
 }

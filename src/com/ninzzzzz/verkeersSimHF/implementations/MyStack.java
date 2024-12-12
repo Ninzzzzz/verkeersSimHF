@@ -1,31 +1,31 @@
 package com.ninzzzzz.verkeersSimHF.implementations;
 
-public class MyStack<T> {
-    private Node<T> top;
+public class MyStack<Vehicle> {
+    private Node<Vehicle> top;
 
-    private static class Node<T> {
-        T data;
-        Node<T> next;
+    private static class Node<Vehicle> {
+        Vehicle data;
+        Node<Vehicle> next;
 
-        Node(T data) {
+        Node(Vehicle data) {
             this.data = data;
         }
     }
 
-    public void push(T data) {
-        Node<T> node = new Node<>(data);
+    public void push(Vehicle data) {
+        Node<Vehicle> node = new Node<>(data);
         node.next = top;
         top = node;
     }
 
-    public T pop() {
+    public Vehicle pop() {
         if (top == null) throw new IllegalStateException("Stack is empty");
-        T data = top.data;
+        Vehicle data = top.data;
         top = top.next;
         return data;
     }
 
-    public T peek() {
+    public Vehicle peek() {
         if (top == null) throw new IllegalStateException("Stack is empty");
         return top.data;
     }

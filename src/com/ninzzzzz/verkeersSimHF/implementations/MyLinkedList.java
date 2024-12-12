@@ -1,23 +1,23 @@
 package com.ninzzzzz.verkeersSimHF.implementations;
 
-public class MyLinkedList<T> {
-    private Node<T> head;
+public class MyLinkedList<Vehicle> {
+    private Node<Vehicle> head;
 
-    private static class Node<T> {
-        T data;
-        Node<T> next;
+    private static class Node<Vehicle> {
+        Vehicle data;
+        Node<Vehicle> next;
 
-        Node(T data) {
+        Node(Vehicle data) {
             this.data = data;
         }
     }
 
-    public void add(T data) {
-        Node<T> node = new Node<>(data);
+    public void add(Vehicle data) {
+        Node<Vehicle> node = new Node<>(data);
         if (head == null) {
             head = node;
         } else {
-            Node<T> current = head;
+            Node<Vehicle> current = head;
             while (current.next != null) {
                 current = current.next;
             }
@@ -25,7 +25,7 @@ public class MyLinkedList<T> {
         }
     }
 
-    public void remove(T data) {
+    public void remove(Vehicle data) {
         if (head == null) return;
 
         if (head.data.equals(data)) {
@@ -33,7 +33,7 @@ public class MyLinkedList<T> {
             return;
         }
 
-        Node<T> current = head;
+        Node<Vehicle> current = head;
         while (current.next != null && !current.next.data.equals(data)) {
             current = current.next;
         }
@@ -43,8 +43,8 @@ public class MyLinkedList<T> {
         }
     }
 
-    public boolean contains(T data) {
-        Node<T> current = head;
+    public boolean contains(Vehicle data) {
+        Node<Vehicle> current = head;
         while (current != null) {
             if (current.data.equals(data)) {
                 return true;

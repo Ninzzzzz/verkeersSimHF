@@ -1,18 +1,18 @@
 package com.ninzzzzz.verkeersSimHF.implementations;
 
-public class MyPriorityQueue<T> {
-    private T[] items;
+public class MyPriorityQueue<Vehicle> {
+    private Vehicle[] items;
     private int size;
     private int[] priorities;
 
     @SuppressWarnings("unchecked")
     public MyPriorityQueue(int capacity) {
-        items = (T[]) new Object[capacity];
+        items = (Vehicle[]) new Object[capacity];
         priorities = new int[capacity];
         size = 0;
     }
 
-    public void enqueue(T item, int priority) {
+    public void enqueue(Vehicle item, int priority) {
         if (size == items.length) {
             resize(2 * items.length);
         }
@@ -22,11 +22,11 @@ public class MyPriorityQueue<T> {
         swim(size - 1);
     }
 
-    public T dequeue() {
+    public Vehicle dequeue() {
         if (isEmpty()) {
             return null;
         }
-        T max = items[0];
+        Vehicle max = items[0];
         swap(0, size - 1);
         size--;
         sink(0);
@@ -38,7 +38,7 @@ public class MyPriorityQueue<T> {
         return max;
     }
 
-    public T peek() {
+    public Vehicle peek() {
         if (isEmpty()) {
             return null;
         }
@@ -79,7 +79,7 @@ public class MyPriorityQueue<T> {
     }
 
     private void swap(int i, int j) {
-        T tempItem = items[i];
+        Vehicle tempItem = items[i];
         int tempPriority = priorities[i];
         items[i] = items[j];
         priorities[i] = priorities[j];
@@ -89,7 +89,7 @@ public class MyPriorityQueue<T> {
 
     @SuppressWarnings("unchecked")
     private void resize(int capacity) {
-        T[] tempItems = (T[]) new Object[capacity];
+        Vehicle[] tempItems = (Vehicle[]) new Object[capacity];
         int[] tempPriorities = new int[capacity];
         System.arraycopy(items, 0, tempItems, 0, size);
         System.arraycopy(priorities, 0, tempPriorities, 0, size);
