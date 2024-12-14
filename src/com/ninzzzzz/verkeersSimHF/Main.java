@@ -1,34 +1,36 @@
 package com.ninzzzzz.verkeersSimHF;
 
-import com.ninzzzzz.verkeersSimHF.models.Vehicle;
 import com.ninzzzzz.verkeersSimHF.models.Wegdek;
+import com.ninzzzzz.verkeersSimHF.services.TrafficLightSensor;
 import com.ninzzzzz.verkeersSimHF.services.VerkeerssimulatieService;
 
 public class Main {
     public static void main(String[] args) {
         VerkeerssimulatieService service = new VerkeerssimulatieService();
 
-        // Initialize roads (Wegdek) with vehicles and assign follow numbers
-        Wegdek north = new Wegdek("North", 10);
+        // Initialize roads (Wegdek) with vehicles and sensors
+        Wegdek north = new Wegdek("North", 10, new TrafficLightSensor(4));
         service.addToNorth(north);
 
-        Wegdek south = new Wegdek("South", 20);
+        Wegdek south = new Wegdek("South", 20, new TrafficLightSensor(2) );
         service.addToSouth(south);
 
-        Wegdek east = new Wegdek("East", 10);
+        Wegdek east = new Wegdek("East", 10, new TrafficLightSensor(1));
         service.addToEast(east);
 
-        Wegdek west = new Wegdek("West", 15);
+        Wegdek west = new Wegdek("West", 15, new TrafficLightSensor(3));
         service.addToWest(west);
+
         // Array of roads to pass to the simulation service
         Wegdek[] roads = {north, south, east, west};
 
-        // Initialize and run the simulation service
+        // **Process all priority vehicles globally**
+        service.processAllPriorityVehicles(roads);
 
-        // Normal playback to simulate the vehicles driving away
+        // **Normal playback to simulate the vehicles driving away**
         service.calculateTrafficLightCycles(roads);
 
-        // Reverse playback to restore the vehicles to their starting positions
+        // **Reverse playback to restore the vehicles to their starting positions**
         service.reversePlayback();
     }
 }

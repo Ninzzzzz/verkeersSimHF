@@ -1,14 +1,17 @@
 package com.ninzzzzz.verkeersSimHF.models;
 
 import com.ninzzzzz.verkeersSimHF.implementations.MyQueue;
+import com.ninzzzzz.verkeersSimHF.services.TrafficLightSensor;
 
 public class Wegdek {
     private String naam;
     private MyQueue<Vehicle> vehiclesOnWegdek;
+    private TrafficLightSensor sensor; //sensor field
 
-    public Wegdek(String naam, int capacity) {
+    public Wegdek(String naam, int capacity, TrafficLightSensor sensor) {
         this.naam = naam;
         this.vehiclesOnWegdek = new MyQueue<>();
+        this.sensor = sensor;
     }
 
     public String getNaam() {
@@ -44,6 +47,13 @@ public class Wegdek {
         }
         vehiclesOnWegdek = tempQueue;
         return count;
+    }
+    public TrafficLightSensor getSensor() {
+        return sensor;
+    }
+
+    public void setSensor(TrafficLightSensor sensor) {
+        this.sensor = sensor;
     }
 
     public void setVehicleQueue(MyQueue<Vehicle> queue) {

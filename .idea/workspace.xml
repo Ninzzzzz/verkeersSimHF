@@ -4,16 +4,13 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="c16e3731-19f8-4d04-86bc-a3cec2a1fc07" name="Changes" comment="back to square one">
+    <list default="true" id="c16e3731-19f8-4d04-86bc-a3cec2a1fc07" name="Changes" comment="typespecific implementations etc">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/implementations/MyLinkedList.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/implementations/MyLinkedList.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/implementations/MyPriorityQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/implementations/MyPriorityQueue.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/implementations/MyQueue.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/implementations/MyQueue.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/implementations/MyStack.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/implementations/MyStack.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/models/Wegdek.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/models/Wegdek.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/services/VerkeerssimulatieService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/com/ninzzzzz/verkeersSimHF/services/VerkeerssimulatieService.java" afterDir="false" />
     </list>
+    <list id="1e384d7e-bcea-4d80-bb1f-0c80949e5cbd" name="Changes by XKiba" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -61,6 +58,26 @@
     &quot;vue.rearranger.settings.migration&quot;: &quot;true&quot;
   }
 }</component>
+  <component name="RunManager">
+    <configuration name="Main" type="Application" factoryName="Application" temporary="true" nameIsGenerated="true">
+      <option name="MAIN_CLASS_NAME" value="com.ninzzzzz.verkeersSimHF.Main" />
+      <module name="VerkeersSimHF" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.ninzzzzz.verkeersSimHF.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Application.Main" />
+      </list>
+    </recent_temporary>
+  </component>
   <component name="SharedIndexes">
     <attachedChunks>
       <set>
@@ -109,7 +126,8 @@
       <workItem from="1733872439776" duration="599000" />
       <workItem from="1733904995985" duration="3201000" />
       <workItem from="1733988866306" duration="992000" />
-      <workItem from="1734037448035" duration="326000" />
+      <workItem from="1734037448035" duration="2923000" />
+      <workItem from="1734125745144" duration="5336000" />
     </task>
     <task id="LOCAL-00001" summary="hi">
       <option name="closed" value="true" />
@@ -175,7 +193,15 @@
       <option name="project" value="LOCAL" />
       <updated>1733989307883</updated>
     </task>
-    <option name="localTasksCounter" value="9" />
+    <task id="LOCAL-00009" summary="typespecific implementations etc">
+      <option name="closed" value="true" />
+      <created>1734037998866</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1734037998866</updated>
+    </task>
+    <option name="localTasksCounter" value="10" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -228,7 +254,8 @@
     <MESSAGE value="Correct info showing but reverse is iffy" />
     <MESSAGE value="follownumber is logical now." />
     <MESSAGE value="back to square one" />
-    <option name="LAST_COMMIT_MESSAGE" value="back to square one" />
+    <MESSAGE value="typespecific implementations etc" />
+    <option name="LAST_COMMIT_MESSAGE" value="typespecific implementations etc" />
   </component>
   <component name="XSLT-Support.FileAssociations.UIState">
     <expand />
