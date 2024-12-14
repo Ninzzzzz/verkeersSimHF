@@ -7,100 +7,104 @@ import com.ninzzzzz.verkeersSimHF.implementations.MyQueue;
 import com.ninzzzzz.verkeersSimHF.implementations.MyLinkedList;
 
 public class VerkeerssimulatieService {
-    private MyLinkedList<Wegdek> playbackOrder = new MyLinkedList<>();
-    private MyStack<VehicleMovement> vehicleMovementStack = new MyStack<>();
-    private int totalCycles = 0;
+    private MyLinkedList<Wegdek> playbackOrder = new MyLinkedList<>(); // Order of roads processed
+    private MyStack<VehicleMovement> vehicleMovementStack = new MyStack<>(); // Stack for reverse playback
+    private int totalCycles = 0; // Count of meaningful cycles
 
     public void calculateTrafficLightCycles(Wegdek[] roads) {
         playbackOrder = new MyLinkedList<>(); // Reset playback order
-        totalCycles = 0; // Reset cycle count (begint weer bij 0)
+        totalCycles = 0; // Reset cycle count to start fresh
         boolean hasMoreVehicles;
 
-        processAllPriorityVehicles(roads); // Handelt eerst high prio vehicles
+        processAllPriorityVehicles(roads); // Handles high-priority vehicles first
 
         do {
-            hasMoreVehicles = false;
+            hasMoreVehicles = false; // Tracks if there are more vehicles to process
 
             for (Wegdek road : roads) {
                 if (!road.isWegdekEmpty()) {
-                    TrafficLightSensor sensor = road.getSensor(); // Get the sensor
+                    TrafficLightSensor sensor = road.getSensor(); // Get the sensor for this road
                     int vehicleCount = road.getVehicleCount();
 
-                    // sensor Skipt green light als wegdek voldoet aan de condities
+                    // Sensor logic: skip green light if conditions are met
                     if (sensor.shouldSkipGreenLight(vehicleCount)) {
                         System.out.println(road.getNaam() + ": Skipping green light (sensor condition).");
-                        continue;
+                        continue; // Skip to the next road
                     }
 
-                    // Gaat eerst actie uitvoeren als aantal vehicles op wegdek voldoen aan condities
+                    // Sensor logic: determine how many vehicles to process
                     int vehiclesToProcess;
                     if (sensor.shouldExtendGreenLight(vehicleCount)) {
-                        vehiclesToProcess = Math.min(vehicleCount, 10);
+                        vehiclesToProcess = Math.min(vehicleCount, 10); // Extend green light for up to 10 vehicles
                         System.out.println(road.getNaam() + ": Extending green light for more vehicles.");
                     } else if (sensor.shouldShortenGreenLight(vehicleCount)) {
-                        vehiclesToProcess = Math.min(vehicleCount, 3);
+                        vehiclesToProcess = Math.min(vehicleCount, 3); // Shorten green light for up to 3 vehicles
                         System.out.println(road.getNaam() + ": Shortening green light for fewer vehicles.");
                     } else {
-                        vehiclesToProcess = sensor.vehiclesToAllow(vehicleCount);
+                        vehiclesToProcess = sensor.vehiclesToAllow(vehicleCount); // Default vehicle processing logic
                     }
 
                     System.out.println(road.getNaam() + ": Green light for " + vehiclesToProcess + " vehicles.");
 
-                    // processes the vehicles
+                    // Process the vehicles on the current road
                     for (int i = 0; i < vehiclesToProcess && !road.isWegdekEmpty(); i++) {
                         Vehicle vehicle = road.removeVehicleFromWegdek();
                         printVehicleMovementWithFollowNumber(vehicle, road.getNaam());
-                        vehicleMovementStack.push(new VehicleMovement(vehicle, road.getNaam()));
+                        vehicleMovementStack.push(new VehicleMovement(vehicle, road.getNaam())); // Record movement for playback
                     }
 
-                    playbackOrder.add(road); // Records the order of the wegdeks processed
-                    hasMoreVehicles = true;
-                    System.out.println(); // gewoon voor betere readability
+                    playbackOrder.add(road); // Record the road for playback
+                    hasMoreVehicles = true; // Vehicles were processed, so more cycles are needed
+                    System.out.println(); // Adds space for readability in output
                 }
             }
 
-            totalCycles++;
+            // Increment total cycles if any vehicles were processed in this pass
+            if (hasMoreVehicles) {
+                totalCycles++;
+            }
         } while (hasMoreVehicles);
 
-        System.out.println("Total Cycles: " + totalCycles);
+        System.out.println("Total Cycles: " + totalCycles); // Print the total number of cycles
     }
 
     public void processAllPriorityVehicles(Wegdek[] roads) {
         for (Wegdek road : roads) {
-            MyQueue<Vehicle> tempQueue = new MyQueue<>();
-            MyQueue<Vehicle> priorityQueue = new MyQueue<>();
+            MyQueue<Vehicle> tempQueue = new MyQueue<>(); // Temporary queue for regular vehicles
+            MyQueue<Vehicle> priorityQueue = new MyQueue<>(); // Queue for priority vehicles
 
+            // Separate priority and regular vehicles
             while (!road.isWegdekEmpty()) {
                 Vehicle vehicle = road.peekNextVehicle();
-                if (vehicle.getPriority() > 0) {
+                if (vehicle.getPriority() > 0) { // Priority vehicles
                     priorityQueue.enqueue(road.removeVehicleFromWegdek());
-                } else {
+                } else { // Regular vehicles
                     tempQueue.enqueue(road.removeVehicleFromWegdek());
                 }
             }
 
-            processPriorityVehicles(priorityQueue, road);
+            processPriorityVehicles(priorityQueue, road); // Process priority vehicles
 
-            road.setVehicleQueue(tempQueue); // Restore FIFO order for regular vehicles
+            road.setVehicleQueue(tempQueue); // Restore regular vehicles to the road in original order
         }
     }
 
     private void processPriorityVehicles(MyQueue<Vehicle> priorityQueue, Wegdek road) {
-        String[] priorityOrder = {"Police", "Fire Truck", "Ambulance"};
+        String[] priorityOrder = {"Police", "Fire Truck", "Ambulance"}; // Order of priority vehicles
 
         for (String priorityType : priorityOrder) {
-            MyQueue<Vehicle> tempQueue = new MyQueue<>();
+            MyQueue<Vehicle> tempQueue = new MyQueue<>(); // Temporary queue for non-matching vehicles
             while (!priorityQueue.isEmpty()) {
                 Vehicle vehicle = priorityQueue.dequeue();
                 String vehicleType = getVehicleType(vehicle.getPriority());
                 if (vehicleType.equals(priorityType)) {
                     printVehicleMovementWithFollowNumber(vehicle, road.getNaam());
-                    vehicleMovementStack.push(new VehicleMovement(vehicle, road.getNaam()));
+                    vehicleMovementStack.push(new VehicleMovement(vehicle, road.getNaam())); // Record movement for playback
                 } else {
-                    tempQueue.enqueue(vehicle);
+                    tempQueue.enqueue(vehicle); // Non-matching vehicles go to the temp queue
                 }
             }
-            priorityQueue = tempQueue;
+            priorityQueue = tempQueue; // Update the priority queue for the next type
         }
     }
 
@@ -140,58 +144,57 @@ public class VerkeerssimulatieService {
             }
         }
     }
-
-public void addToWest(Wegdek west) {
-        west.addVehicleToWegdek(new Vehicle("CD-0123", 0, 1));  // Regular car
-        west.addVehicleToWegdek(new Vehicle("EF-4567", 0, 2));  // Regular car
-        west.addVehicleToWegdek(new Vehicle("GH-8901", 0, 3));  // Regular car
-        west.addVehicleToWegdek(new Vehicle("IJ-2345", 0, 4));  // Regular car
-        west.addVehicleToWegdek(new Vehicle("KL-6789", 0, 5));  // Regular car
-        west.addVehicleToWegdek(new Vehicle("MN-0123", 0, 6));  // Regular car
-        west.addVehicleToWegdek(new Vehicle("OP-4567", 0,7));  // Regular car
-        west.addVehicleToWegdek(new Vehicle("QR-8901", 0, 8));  // Regular car
-        west.addVehicleToWegdek(new Vehicle("ST-2345", 1, 9));  // Ambulance (9th vehicle)
-        west.addVehicleToWegdek(new Vehicle("UV-6789", 0, 10));  // Regular car
-        west.addVehicleToWegdek(new Vehicle("WX-0123", 0, 11));  // Regular car
-        west.addVehicleToWegdek(new Vehicle("YZ-4567", 0, 12));  // Regular car
-        west.addVehicleToWegdek(new Vehicle("AB-8901", 0, 13));  // Regular car
-        west.addVehicleToWegdek(new Vehicle("CD-2345", 0, 14));  // Regular car
+    public void addToWest(Wegdek west) {
+        west.addVehicleToWegdek(new Vehicle("CD-0123", 0, 1));  // Regular vehicle
+        west.addVehicleToWegdek(new Vehicle("EF-4567", 0, 2));
+        west.addVehicleToWegdek(new Vehicle("GH-8901", 0, 3));
+        west.addVehicleToWegdek(new Vehicle("IJ-2345", 0, 4));
+        west.addVehicleToWegdek(new Vehicle("KL-6789", 0, 5));
+        west.addVehicleToWegdek(new Vehicle("MN-0123", 0, 6));
+        west.addVehicleToWegdek(new Vehicle("OP-4567", 0,7));
+        west.addVehicleToWegdek(new Vehicle("QR-8901", 0, 8));
+        west.addVehicleToWegdek(new Vehicle("ST-2345", 1, 9));  // Ambulance (9th and high prio vehicle)
+        west.addVehicleToWegdek(new Vehicle("UV-6789", 0, 10));
+        west.addVehicleToWegdek(new Vehicle("WX-0123", 0, 11));
+        west.addVehicleToWegdek(new Vehicle("YZ-4567", 0, 12));
+        west.addVehicleToWegdek(new Vehicle("AB-8901", 0, 13));
+        west.addVehicleToWegdek(new Vehicle("CD-2345", 0, 14));
     }
 
     public void addToEast(Wegdek east) {
-        east.addVehicleToWegdek(new Vehicle("ST-0123", 0, 1));  // Regular car
-        east.addVehicleToWegdek(new Vehicle("UV-4567", 0, 2));  // Regular car
-        east.addVehicleToWegdek(new Vehicle("WX-8901", 0, 3));  // Regular car
-        east.addVehicleToWegdek(new Vehicle("YZ-2345", 0, 4));  // Regular car
-        east.addVehicleToWegdek(new Vehicle("AB-6789", 0, 5));  // Regular car
+        east.addVehicleToWegdek(new Vehicle("ST-0123", 0, 1));
+        east.addVehicleToWegdek(new Vehicle("UV-4567", 0, 2));
+        east.addVehicleToWegdek(new Vehicle("WX-8901", 0, 3));
+        east.addVehicleToWegdek(new Vehicle("YZ-2345", 0, 4));
+        east.addVehicleToWegdek(new Vehicle("AB-6789", 0, 5));
     }
 
     public void addToSouth(Wegdek south) {
-        south.addVehicleToWegdek(new Vehicle("IJ-7890", 0, 1));  // Regular car
-        south.addVehicleToWegdek(new Vehicle("KL-2345", 0, 2));  // Regular car
-        south.addVehicleToWegdek(new Vehicle("MN-6789", 0, 3));  // Regular car
-        south.addVehicleToWegdek(new Vehicle("OP-0123", 0, 4));  // Regular car
-        south.addVehicleToWegdek(new Vehicle("QR-4567", 0, 5));  // Regular car
-        south.addVehicleToWegdek(new Vehicle("ST-8901", 0, 6));  // Regular car
-        south.addVehicleToWegdek(new Vehicle("UV-2345", 0, 7));  // Regular car
-        south.addVehicleToWegdek(new Vehicle("WX-6789", 0, 8));  // Regular car
-        south.addVehicleToWegdek(new Vehicle("YZ-0123", 0, 9));  // Regular car
-        south.addVehicleToWegdek(new Vehicle("AB-4567", 0, 10));  // Regular car
-        south.addVehicleToWegdek(new Vehicle("CD-8901", 0, 11));  // Regular car
-        south.addVehicleToWegdek(new Vehicle("EF-2345", 0, 12));  // Regular car
-        south.addVehicleToWegdek(new Vehicle("GH-6789", 0, 13));  // Regular car
-        south.addVehicleToWegdek(new Vehicle("IJ-0123", 0, 14));  // Regular car
-        south.addVehicleToWegdek(new Vehicle("KL-4567", 0, 15));  // Regular car
-        south.addVehicleToWegdek(new Vehicle("MN-8901", 0, 16));  // Regular car
+        south.addVehicleToWegdek(new Vehicle("IJ-7890", 0, 1));
+        south.addVehicleToWegdek(new Vehicle("KL-2345", 0, 2));
+        south.addVehicleToWegdek(new Vehicle("MN-6789", 0, 3));
+        south.addVehicleToWegdek(new Vehicle("OP-0123", 0, 4));
+        south.addVehicleToWegdek(new Vehicle("QR-4567", 0, 5));
+        south.addVehicleToWegdek(new Vehicle("ST-8901", 0, 6));
+        south.addVehicleToWegdek(new Vehicle("UV-2345", 0, 7));
+        south.addVehicleToWegdek(new Vehicle("WX-6789", 0, 8));
+        south.addVehicleToWegdek(new Vehicle("YZ-0123", 0, 9));
+        south.addVehicleToWegdek(new Vehicle("AB-4567", 0, 10));
+        south.addVehicleToWegdek(new Vehicle("CD-8901", 0, 11));
+        south.addVehicleToWegdek(new Vehicle("EF-2345", 0, 12));
+        south.addVehicleToWegdek(new Vehicle("GH-6789", 0, 13));
+        south.addVehicleToWegdek(new Vehicle("IJ-0123", 0, 14));
+        south.addVehicleToWegdek(new Vehicle("KL-4567", 0, 15));
+        south.addVehicleToWegdek(new Vehicle("MN-8901", 0, 16));
         south.addVehicleToWegdek(new Vehicle("OP-2345", 2,17));  // Fire truck (17th vehicle)
-        south.addVehicleToWegdek(new Vehicle("QR-6789", 0, 18));  // Regular car
+        south.addVehicleToWegdek(new Vehicle("QR-6789", 0, 18));
     }
 
     public  void addToNorth(Wegdek north) {
-        north.addVehicleToWegdek(new Vehicle("AB-1234", 0, 1));  // Regular car
-        north.addVehicleToWegdek(new Vehicle("CD-5678", 0, 2));  // Regular car
+        north.addVehicleToWegdek(new Vehicle("AB-1234", 0, 1));
+        north.addVehicleToWegdek(new Vehicle("CD-5678", 0, 2));
         north.addVehicleToWegdek(new Vehicle("EF-9012", 3, 3));  // Police (3rd vehicle)
-        north.addVehicleToWegdek(new Vehicle("GH-3456", 0, 4));  // Regular car
+        north.addVehicleToWegdek(new Vehicle("GH-3456", 0, 4));
     }
 
 }

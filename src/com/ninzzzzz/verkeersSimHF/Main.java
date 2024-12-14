@@ -24,13 +24,12 @@ public class Main {
         // Array of roads to pass to the simulation service
         Wegdek[] roads = {north, south, east, west};
 
-        // **Process all priority vehicles globally**
         service.processAllPriorityVehicles(roads);
 
-        // **Normal playback to simulate the vehicles driving away**
+        // Normal playback to simulate the vehicles driving away
         service.calculateTrafficLightCycles(roads);
 
-        // **Reverse playback to restore the vehicles to their starting positions**
+        //reversed version of the normal pb
         service.reversePlayback();
     }
 }
