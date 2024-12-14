@@ -10,44 +10,55 @@ public class VerkeerssimulatieService {
     private MyLinkedList<Wegdek> playbackOrder = new MyLinkedList<>();
     private MyStack<VehicleMovement> vehicleMovementStack = new MyStack<>();
     private int totalCycles = 0;
-//    private int globalFollowNumber = 1; // Follow number across all roads
 
     public void calculateTrafficLightCycles(Wegdek[] roads) {
         playbackOrder = new MyLinkedList<>(); // Reset playback order
-        int maxVehiclesPerCycle = 5;
+        totalCycles = 0; // Reset cycle count (begint weer bij 0)
         boolean hasMoreVehicles;
 
-        processAllPriorityVehicles(roads); // Handle priority vehicles first
+        processAllPriorityVehicles(roads); // Handelt eerst high prio vehicles
 
         do {
             hasMoreVehicles = false;
+
             for (Wegdek road : roads) {
                 if (!road.isWegdekEmpty()) {
                     TrafficLightSensor sensor = road.getSensor(); // Get the sensor
                     int vehicleCount = road.getVehicleCount();
 
-                    // Skip green light if sensor condition is met
+                    // sensor Skipt green light als wegdek voldoet aan de condities
                     if (sensor.shouldSkipGreenLight(vehicleCount)) {
                         System.out.println(road.getNaam() + ": Skipping green light (sensor condition).");
                         continue;
                     }
 
-                    // Determine how many vehicles to process
-                    int vehiclesToProcess = sensor.vehiclesToAllow(vehicleCount);
+                    // Gaat eerst actie uitvoeren als aantal vehicles op wegdek voldoen aan condities
+                    int vehiclesToProcess;
+                    if (sensor.shouldExtendGreenLight(vehicleCount)) {
+                        vehiclesToProcess = Math.min(vehicleCount, 10);
+                        System.out.println(road.getNaam() + ": Extending green light for more vehicles.");
+                    } else if (sensor.shouldShortenGreenLight(vehicleCount)) {
+                        vehiclesToProcess = Math.min(vehicleCount, 3);
+                        System.out.println(road.getNaam() + ": Shortening green light for fewer vehicles.");
+                    } else {
+                        vehiclesToProcess = sensor.vehiclesToAllow(vehicleCount);
+                    }
+
                     System.out.println(road.getNaam() + ": Green light for " + vehiclesToProcess + " vehicles.");
 
-                    // Process vehicles
+                    // processes the vehicles
                     for (int i = 0; i < vehiclesToProcess && !road.isWegdekEmpty(); i++) {
                         Vehicle vehicle = road.removeVehicleFromWegdek();
                         printVehicleMovementWithFollowNumber(vehicle, road.getNaam());
                         vehicleMovementStack.push(new VehicleMovement(vehicle, road.getNaam()));
                     }
 
-                    playbackOrder.add(road); // Record the order of roads processed
+                    playbackOrder.add(road); // Records the order of the wegdeks processed
                     hasMoreVehicles = true;
-                    System.out.println(); // Add space between roads for readability
+                    System.out.println(); // gewoon voor betere readability
                 }
             }
+
             totalCycles++;
         } while (hasMoreVehicles);
 
@@ -130,8 +141,7 @@ public class VerkeerssimulatieService {
         }
     }
 
-
-    public void addToWest(Wegdek west) {
+public void addToWest(Wegdek west) {
         west.addVehicleToWegdek(new Vehicle("CD-0123", 0, 1));  // Regular car
         west.addVehicleToWegdek(new Vehicle("EF-4567", 0, 2));  // Regular car
         west.addVehicleToWegdek(new Vehicle("GH-8901", 0, 3));  // Regular car

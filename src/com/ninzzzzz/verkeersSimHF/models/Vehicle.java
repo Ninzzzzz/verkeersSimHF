@@ -1,9 +1,9 @@
 package com.ninzzzzz.verkeersSimHF.models;
 
 public class Vehicle {
-    private String id;        // License plate following Surinamese standards
-    private int priority;     // Priority level, where a higher number means higher priority
-    private int followNumber; // The follow number assigned to this vehicle
+    private String id;        // kentekenplaat volgens surinaamse standaarden
+    private int priority;     // Priority level, hoger nummer means higher priority
+    private int followNumber; // The follow number assigned to this vehicle (per wegdek)
 
     public Vehicle(String id, int priority, int followNumber) {
         this.id = id;

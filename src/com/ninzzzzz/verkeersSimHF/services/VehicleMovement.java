@@ -12,10 +12,12 @@ public class VehicleMovement {
     }
 
     public Vehicle getVehicle() {
+
         return vehicle;
     }
 
     public String getRoadName() {
+
         return roadName;
     }
 }
